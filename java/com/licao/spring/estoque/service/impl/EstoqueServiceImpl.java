@@ -28,7 +28,7 @@ public class EstoqueServiceImpl implements EstoqueService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Estoque persistir(Estoque estoque) throws Exception {
+	public Estoque persistir(Estoque estoque) {
 		return estoqueRepository.save(estoque);
 	}
 
@@ -43,10 +43,9 @@ public class EstoqueServiceImpl implements EstoqueService {
 	}
 
 	@Override
-	public void atualizarStatus(Estoque estoque) throws Exception {
+	public Estoque atualizarStatus(Estoque estoque) {
 
 		if (existe(estoque.getId())) {
-
 			int quantidade = estoque.getQuantidade();
 			int quantidadeStatusAlto = estoque.getQuantidadeStatusAlto();
 			int quantidadeStatusBaixo = estoque.getQuantidadeStatusBaixo();
@@ -60,8 +59,35 @@ public class EstoqueServiceImpl implements EstoqueService {
 			}
 
 			estoque.setStatus(status);
-			persistir(estoque);
+			Estoque estoqueAtualizado = persistir(estoque);
+
+			return estoqueAtualizado;
+		}
+
+		return null;
+	}
+
+	@Override
+	public Estoque atualizarQuantidade(Estoque estoque, int quantidade) {
+
+		if (existe(estoque.getId())) {
+
+			int quantidadeAtual = estoque.getQuantidade();
+			int quantidadeAtualizada = quantidadeAtual - quantidade;
+
+			estoque.setQuantidade(quantidadeAtualizada);
+			Estoque estoqueAtualizado = persistir(estoque);
+
+			return estoqueAtualizado;
 
 		}
+
+		return null;
+	}
+
+	@Override
+	public Optional<Estoque> buscarEstoquePorIdProduto(Integer idProduto) {
+
+		return estoqueRepository.buscarPorIdProduto(idProduto);
 	}
 }
