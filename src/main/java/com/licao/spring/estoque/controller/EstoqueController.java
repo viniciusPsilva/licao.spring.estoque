@@ -1,6 +1,7 @@
 package com.licao.spring.estoque.controller;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.licao.spring.Entidades.models.Estoque;
+import com.licao.spring.Entidades.models.Item;
 import com.licao.spring.estoque.service.EstoqueService;
 
 @Controller
@@ -106,6 +108,12 @@ public class EstoqueController {
 		}
 	}
 
+	@PatchMapping(value = "/atualizar/status")
+	public ResponseEntity<Void> atualizarStatus(@RequestBody List<Item> itens) {
+		estoqueService.atualizarStatus(itens);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
 	// @PatchMapping(value = "/{id}/atualizar/quantidade")
 	@PatchMapping(value = "/atualizar/quantidade/produto/{idProduto}")
 	public ResponseEntity<Estoque> atualizarQuantidade(@PathVariable("idProduto") Integer idProduto,
@@ -113,7 +121,7 @@ public class EstoqueController {
 		try {
 			// TODO talvez seja melhor buscar o estoque pelo id do produto.
 			Optional<Estoque> estoque = estoqueService.buscarEstoquePorIdProduto(idProduto);
-			
+
 			if (estoque.isPresent()) {
 
 				Estoque EstoqueAtualizado = estoqueService.atualizarQuantidade(estoque.get(), quantidade);
@@ -126,6 +134,11 @@ public class EstoqueController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
+	}
+
+	@PatchMapping(value = "/atualizar/quantidade")
+	public ResponseEntity<Void> atualizarQuantidadeEstoque(@RequestBody List<Item> itens) {
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@GetMapping(value = "/produto/{id}")

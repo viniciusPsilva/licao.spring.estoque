@@ -1,5 +1,6 @@
 package com.licao.spring.estoque.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.licao.spring.Entidades.enuns.StatusEstoque;
 import com.licao.spring.Entidades.models.Estoque;
+import com.licao.spring.Entidades.models.Item;
 import com.licao.spring.estoque.repository.EstoqueRepository;
 import com.licao.spring.estoque.service.EstoqueService;
 
@@ -66,6 +68,19 @@ public class EstoqueServiceImpl implements EstoqueService {
 
 		return null;
 	}
+	
+	@Override
+	public void atualizarStatus(List<Item> itens) {
+		
+		for (Item item : itens) {
+			Integer idProduto = item.getProduto().getId();
+			Optional<Estoque> optionalEstoque = buscarEstoquePorIdProduto(idProduto);
+			
+			if (optionalEstoque.isPresent()) {
+				atualizarStatus(optionalEstoque.get());
+			}
+		}
+	}
 
 	@Override
 	public Estoque atualizarQuantidade(Estoque estoque, int quantidade) {
@@ -83,6 +98,22 @@ public class EstoqueServiceImpl implements EstoqueService {
 		}
 
 		return null;
+	}
+	
+	public void atualizarQuantidade(List<Item> itens) {
+
+	
+			for (Item item : itens) {
+				
+				Integer idProduto = item.getProduto().getId();
+				int quantidadeDeitem = item.getQuantidade();
+				
+				Optional<Estoque> optionalEstoque = buscarEstoquePorIdProduto(idProduto);
+				
+				if (optionalEstoque.isPresent()) {
+					atualizarQuantidade(optionalEstoque.get(), quantidadeDeitem);
+				}			
+			}
 	}
 
 	@Override
