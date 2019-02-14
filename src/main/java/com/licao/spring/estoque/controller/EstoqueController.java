@@ -138,6 +138,7 @@ public class EstoqueController {
 
 	@PatchMapping(value = "/atualizar/quantidade")
 	public ResponseEntity<Void> atualizarQuantidadeEstoque(@RequestBody List<Item> itens) {
+		estoqueService.atualizarQuantidade(itens);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 

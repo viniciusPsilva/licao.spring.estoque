@@ -17,4 +17,5 @@ public interface EstoqueService extends Service<Estoque>{
 	public Optional<Estoque> buscarEstoquePorIdProduto(Integer idProduto);
 	
 	public void atualizarStatus(List<Item> itens);
+
 }
